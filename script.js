@@ -1,12 +1,12 @@
 keys = document.querySelectorAll(".keys div");
 dis = document.querySelector(".screen div");
-let inputKeys = ["1","2","3","4","5","6","7","8","9","0","/","+","-","*","="];
+let inputKeys = ["1","2","3","4","5","6","7","8","9","0","/","+","-","*","=",".","Enter"];
 let operators = ["+", "-", "*", "/", "="];
 let a = null,
   b = "",
   op = null;
 let input;
-
+let decimal=false;
 
 //Event Listners
 
@@ -39,6 +39,7 @@ function display(input) {
       a = null;
       b = "";
       op = null;
+      return;
     }
     a = input;
     dis.textContent = a;
@@ -54,6 +55,7 @@ function display(input) {
       op = input;
       dis.textContent += op;
     } else {
+      if(a.includes(".")&&input==".")return;
       a += input;
       dis.textContent += input;
     }
@@ -72,14 +74,23 @@ function display(input) {
       calculate(a, b, op, input);
       if (input != "=") dis.textContent += input;
     } else {
+      if(b.includes(".")&&input==".")return;
       b += input;
       dis.textContent += input;
     }
   }
+  if(input=='.')decimal=true;
 //   console.log(`a:${a}\nb:${b}\nop:${op}\n\n`);
 }
 function calculate(x, y, oper, input) {
   // console.log(`a:${a},b:${b},op:${op}`);
+  if(x.charAt(x.length-1)=="."||y.charAt(y.length-1)=="."){
+    a=null;
+    b="";
+    op=null;
+    dis.textContent="Syntax Error";
+    return;
+  }
   inp1 = Number(x);
   inp2 = Number(y);
   switch (oper) {
@@ -93,6 +104,13 @@ function calculate(x, y, oper, input) {
       res = inp1 * inp2;
       break;
     case "/":
+      if(inp2==0){
+        dis.textContent="Syntax Error";
+        a=null;
+        op=null;
+        b="";
+        return;
+      }
       res = inp1 / inp2;
       res = Math.round((res + Number.EPSILON) * 100) / 100;
       break;
@@ -127,6 +145,9 @@ function backspace() {
 document.addEventListener('keydown',(e)=>{
   let key=e.key;
   // console.log(key);
+  if(key=="Enter"){
+    key="=";
+  }
   if(inputKeys.includes(key)){
     display(key);
     // console.log(key);
