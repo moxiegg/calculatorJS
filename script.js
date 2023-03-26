@@ -1,12 +1,17 @@
 keys = document.querySelectorAll(".keys div");
 dis = document.querySelector(".screen div");
+let inputKeys = ["1","2","3","4","5","6","7","8","9","0","/","+","-","*","="];
+let operators = ["+", "-", "*", "/", "="];
 let a = null,
   b = "",
   op = null;
+let input;
+
 
 //Event Listners
+
 keys.forEach((key) => {
-  key.addEventListener("click", display);
+  key.addEventListener("click", getInput);
 });
 
 clear = document.querySelector("#clear");
@@ -18,10 +23,16 @@ clear.addEventListener("click", () => {
 });
 back = document.querySelector("#back");
 back.addEventListener("click", backspace);
-let operators = ["+", "-", "*", "/", "="];
+
+
 //Functions
-function display(e) {
-  let input = e.target.textContent;
+
+function getInput(e){
+  input=e.target.textContent;
+  display(input);
+}
+
+function display(input) {
   if (a == null) {
     if (operators.includes(input)) {
       dis.textContent = "Syntax Error";
@@ -68,7 +79,7 @@ function display(e) {
 //   console.log(`a:${a}\nb:${b}\nop:${op}\n\n`);
 }
 function calculate(x, y, oper, input) {
-  console.log(`a:${a},b:${b},op:${op}`);
+  // console.log(`a:${a},b:${b},op:${op}`);
   inp1 = Number(x);
   inp2 = Number(y);
   switch (oper) {
@@ -112,3 +123,12 @@ function backspace() {
   }
 //   console.log(`a:${a}\nb:${b}\nop:${op}\n\n`);
 }
+
+document.addEventListener('keydown',(e)=>{
+  let key=e.key;
+  // console.log(key);
+  if(inputKeys.includes(key)){
+    display(key);
+    // console.log(key);
+  }else if(key=="Backspace")backspace();
+})
